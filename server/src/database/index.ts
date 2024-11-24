@@ -1,21 +1,24 @@
-// import mongoose from "mongoose";
+import mongoose from "mongoose";
 
-// const server = "127.0.0.1:27017";
-// const database = "MyDB";
-// class Database {
-//   constructor() {
-//     this._connect();
-//   }
-//   _connect() {
-//     mongoose
-//       .connect(`mongodb://${server}/${database}`)
-//       .then(() => {
-//         console.log("Database connection successful");
-//       })
-//       .catch((err) => {
-//         console.error("Database connection failed");
-//       });
-//   }
-// }
+const MONGO_URI =
+  process.env.MONGO_URI ?? "mongodb://localhost:27017/mydatabase";
 
-// module.exports = new Database();
+export async function connectDatabase(): Promise<void> {
+  try {
+    await mongoose.connect(MONGO_URI);
+
+    console.log("✅ Database connected successfully!");
+  } catch (error) {
+    console.error("❌ Error connecting to the database:", error);
+    process.exit(1);
+  }
+}
+
+export async function disconnectDatabase(): Promise<void> {
+  try {
+    await mongoose.disconnect();
+    console.log("✅ Database disconnected successfully!");
+  } catch (error) {
+    console.error("❌ Error disconnecting from the database:", error);
+  }
+}
